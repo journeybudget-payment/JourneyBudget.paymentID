@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Web Pembayaran JourneyBudget</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="popup-overlay" id="fraudPopup">
+        <div class="popup-box">
+            <div class="popup-icon">🚨</div>
+            <h2>PERINGATAN PENIPU</h2>
+            <div class="popup-content">
+                <p><b>🔒 Rahasia Pribadi:</b> Jangan pernah bagikan kata sandi atau kode OTP Anda dengan siapa pun termasuk agen kami.</p>
+                <p><b>🌐 Situs Web Resmi:</b> Pastikan Anda hanya mengakses tautan resmi kami di <a href="https://www.journeybudget.com/" target="_blank">www.journeybudget.com</a> untuk menghindari taktik phishing.</p>
+                <p><b>📱 Kode QR DuitNow:</b> Hanya lakukan pembayaran menggunakan Kode QR DuitNow resmi yang ditampilkan di portal ini saja.</p>
+                <h3>🚨 AKUN BANK PENIPU YANG TERIDENTIFIKASI</h3>
+                <ul>
+                    <li>GX BANK - JESSICA ANAK LATEN</li>
+                    <li>CIMB - AZROL HANAFI BIN MUHAMAD ABDUL</li>
+                    <li>RYT - SNIP & SNIP SDN BHD</li>
+                </ul>
+                <p><b>Jangan pernah mentransfer uang ke akun ini.</b></p>
+            </div>
+            <button class="btn-popup-close" onclick="closePopup()">Saya Mengerti</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-placeholder">
+                <img src="IMG_6302.jpeg" alt="Logo JourneyBudget" width="150">
+            </div>
+            <p class="subtitle">Halaman Web Resmi Pembayaran Pengembalian Pinjaman</p>
+        </div>
+
+        <div class="form-wrapper">
+            <div class="progress-container">
+                <div class="progress-line"><div class="progress-line-fill" id="progressLine"></div></div>
+                <div class="progress-item active" id="p1"><div class="p-num">1</div><div class="p-txt">Informasi</div></div>
+                <div class="progress-item" id="p2"><div class="p-num">2</div><div class="p-txt">Pembayaran QR</div></div>
+                <div class="progress-item" id="p3"><div class="p-num">3</div><div class="p-txt">Unggah Bukti</div></div>
+                <div class="progress-item" id="p4"><div class="p-num">✓</div><div class="p-txt">Selesai</div></div>
+            </div>
+
+            <div class="form-step active" id="step1">
+                <h3>📋 Langkah 1: Informasi Pelanggan</h3>
+                <div class="form-group">
+                    <label>Nama Lengkap (Sesuai KTP) *</label>
+                    <input type="text" id="fullname" placeholder="Masukkan nama lengkap Anda" required>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Kartu Identitas (KTP) *</label>
+                    <input type="text" id="icnumber" placeholder="Contoh: 950102035432" maxlength="12" required>
+                </div>
+                <div class="form-group">
+                    <label>ID Aplikasi (App ID) *</label>
+                    <input type="text" id="appid" placeholder="Contoh: APP0000001" required>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah Pembayaran Pengembalian (Rp) *</label>
+                    <input type="number" id="amount" placeholder="0.00" step="0.01" required>
+                </div>
+                <button class="btn btn-next" onclick="goToStep2()">Selanjutnya (Pembayaran) →</button>
+            </div>
+
+            <div class="form-step" id="step2">
+                <h3>💵 Langkah 2: Pindai Kode QR DuitNow</h3>
+                <p class="step-info">Silakan pindai Kode QR di bawah menggunakan aplikasi Bank atau e-Wallet Anda untuk jumlah <b>Rp <span id="displayAmount">0.00</span></b>.</p>
+                <div class="qr-container">
+                    <img src="IMG_6267.jpeg" alt="Kode QR JourneyBudget" class="qr-image">
+                </div>
+                <div class="payment-details">
+                    <p><b>Penerima:</b> JOURNEY BUDGET</p>
+                    <p><b>Referensi:</b> <span id="displayAppId">APP0000000</span></p>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-back" onclick="prevStep(1)">← Kembali</button>
+                    <button class="btn btn-next" onclick="nextStep(3)">Saya Sudah Membayar →</button>
+                </div>
+            </div>
+
+            <div class="form-step" id="step3">
+                <h3>📎 Langkah 3: Unggah Bukti</h3>
+                <p class="step-info">Silakan unggah bukti pembayaran (PDF atau Gambar) untuk verifikasi akun Anda.</p>
+                <div class="upload-box" onclick="document.getElementById('receiptFile').click()">
+                    <div class="upload-icon">📤</div>
+                    <p id="uploadStatus">Klik di sini untuk memilih bukti</p>
+                    <span style="font-size: 0.8em; color: #a0aec0;">Format: PNG, JPG, JPEG, PDF (Maks: 5MB)</span>
+                    <input type="file" id="receiptFile" accept=".png,.jpg,.jpeg,.pdf" style="display:none;" onchange="fileSelected()">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-back" onclick="prevStep(2)">← Kembali</button>
+                    <button class="btn btn-success" onclick="submitReceipt()">Kirim Verifikasi ✓</button>
+                </div>
+            </div>
+
+            <div class="form-step" id="step4">
+                <div class="success-screen">
+                    <div class="success-icon">🎉</div>
+                    <h2>Pembayaran Berhasil!</h2>
+                    <p>Terima kasih <b><span id="displayCustomerName">Pelanggan</span></b>. Bukti dan informasi pembayaran Anda untuk ID <b><span id="displayFinalAppId">APP0000000</span></b> telah berhasil diterima.</p>
+                    <div class="status-badge">Sedang Diverifikasi (Maks: 24 Jam)</div>
+                    <button class="btn btn-next" onclick="resetForm()" style="margin-top: 20px;">Buat Pembayaran Baru</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="social-channels">
+            <h4>Hubungi Saluran Resmi Kami:</h4>
+            <div class="links-grid">
+                <a href="https://wa.me/60123456789" target="_blank" class="chan-link whatsapp">💬 Dukungan WhatsApp</a>
+                <a href="https://t.me/journeybudget_support" target="_blank" class="chan-link telegram">✈️ Telegram Resmi</a>
+                <a href="https://www.journeybudget.com/" target="_blank" class="chan-link website">🌐 Halaman Web Utama</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- File JavaScript (untuk fungsi formulir/popup portal) -->
+    <script src="script.js"></script>
+
+</body>
+</html>
